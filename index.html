@@ -1,11 +1,147 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Foodiez - Gestion Restaurant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap');
+    body { font-family: 'DM Sans', system-ui, sans-serif; }
+    .title-font { font-family: 'Syne', sans-serif; }
     
+    .section { display: none; }
+    .section.active { display: block; }
+    
+    .nav-link { transition: all 0.3s; }
+    .nav-link.active { color: #FF4D1C; border-bottom: 2px solid #FF4D1C; }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+  </style>
+</head>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen">
+
+  <!-- NAVBAR -->
+  <nav class="bg-zinc-900 border-b border-zinc-800 fixed w-full z-50">
+    <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+      <div onclick="navigate('dashboard')" class="flex items-center gap-3 cursor-pointer">
+        <div class="w-10 h-10 bg-orange-600 rounded-2xl flex items-center justify-center text-2xl">🍔</div>
+        <h1 class="title-font text-3xl font-bold tracking-tight text-white">Foodiez</h1>
+      </div>
+
+      <div class="flex items-center gap-10 text-base font-medium">
+        <a onclick="navigate('dashboard')" class="nav-link cursor-pointer flex items-center gap-2 active" data-section="dashboard">
+          <i class="fas fa-chart-bar"></i> Dashboard
+        </a>
+        <a onclick="navigate('orders')" class="nav-link cursor-pointer flex items-center gap-2" data-section="orders">
+          <i class="fas fa-list-ul"></i> Commandes
+        </a>
+        <a onclick="navigate('new-order')" class="nav-link cursor-pointer flex items-center gap-2" data-section="new-order">
+          <i class="fas fa-plus-circle"></i> Nouvelle Commande
+        </a>
+      </div>
+
+      <div id="restaurant-name" class="text-zinc-400 font-medium"></div>
+    </div>
+  </nav>
+
+  <div class="pt-24 pb-12 max-w-7xl mx-auto px-6">
+
+    <!-- ==================== DASHBOARD ==================== -->
+    <section id="dashboard" class="section active">
+      <h2 class="title-font text-4xl font-bold mb-10">Tableau de bord</h2>
+      
+      <div id="stats-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-12">
+        <!-- Stats cards seront ajoutées par JS -->
+      </div>
+
+      <h3 class="text-2xl font-semibold mb-6">Dernières Commandes</h3>
+      <div id="last-orders" class="bg-zinc-900 rounded-3xl overflow-hidden">
+        <!-- Dernières commandes par JS -->
+      </div>
+    </section>
+
+    <!-- ==================== LISTE COMMANDES ==================== -->
+    <section id="orders" class="section">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <h2 class="title-font text-4xl font-bold">Commandes</h2>
+        <div id="status-tabs" class="flex bg-zinc-900 p-1.5 rounded-3xl gap-1">
+          <!-- Tabs par JS -->
+        </div>
+      </div>
+
+      <div id="orders-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Commandes cards par JS -->
+      </div>
+    </section>
+
+    <!-- ==================== NOUVELLE COMMANDE ==================== -->
+    <section id="new-order" class="section">
+      <div class="max-w-2xl mx-auto">
+        <h2 class="title-font text-4xl font-bold mb-10 text-center">Créer une nouvelle commande</h2>
+        
+        <div class="bg-zinc-900 rounded-3xl p-8 shadow-xl">
+          
+          <div class="mb-8">
+            <label class="block text-zinc-400 mb-3 text-sm font-medium">Nom du client</label>
+            <input id="customer-name" type="text" 
+                   class="w-full bg-zinc-800 border border-zinc-700 focus:border-orange-500 rounded-2xl px-6 py-5 outline-none text-lg"
+                   placeholder="Ex: Mohammed El Amrani"/>
+          </div>
+
+          <div class="mb-8">
+            <label class="block text-zinc-400 mb-3 text-sm font-medium">Articles</label>
+            <div class="flex gap-3">
+              <input id="new-item" type="text" 
+                     class="flex-1 bg-zinc-800 border border-zinc-700 focus:border-orange-500 rounded-2xl px-6 py-5 outline-none"
+                     placeholder="Ajouter un plat ou boisson" onkeypress="if(event.key === 'Enter') addItem()"/>
+              <button onclick="addItem()" 
+                      class="bg-orange-600 hover:bg-orange-700 px-8 rounded-2xl font-semibold">
+                Ajouter
+              </button>
+            </div>
+            <div id="items-list" class="flex flex-wrap gap-3 mt-5"></div>
+          </div>
+
+          <div class="mb-10">
+            <label class="block text-zinc-400 mb-3 text-sm font-medium">Prix total (DH)</label>
+            <input id="total-price" type="number" 
+                   class="w-full bg-zinc-800 border border-zinc-700 focus:border-orange-500 rounded-2xl px-6 py-5 outline-none text-2xl"
+                   placeholder="0.00"/>
+          </div>
+
+          <div class="flex gap-4">
+            <button onclick="submitOrder()" 
+                    class="flex-1 bg-orange-600 hover:bg-orange-700 py-6 rounded-3xl text-lg font-semibold transition">
+              Confirmer la commande
+            </button>
+            <button onclick="resetForm()" 
+                    class="flex-1 bg-zinc-800 hover:bg-zinc-700 py-6 rounded-3xl text-lg font-semibold transition">
+              Réinitialiser
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-zinc-900 border-t border-zinc-800 py-8 text-center text-zinc-500 text-sm">
+    <div id="footer-info">Foodiez • contact@foodiez.com</div>
+  </footer>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="hidden fixed bottom-6 right-6 bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4 shadow-2xl flex items-center gap-3 z-50"></div>
+
+  <script>
+    // Ton JavaScript ici (je peux te le donner séparément si tu veux)
+  </script>
 </body>
 </html>

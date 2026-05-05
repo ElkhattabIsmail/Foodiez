@@ -1,351 +1,221 @@
 <!DOCTYPE html>
 <html lang="fr" class="dark">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Foodiez - Gestion des Commandes</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@600&family=DM+Sans:wght@400;500&display=swap');
-    body { font-family: 'DM Sans', sans-serif; }
-    .title-font { font-family: 'Syne', sans-serif; }
-    .card-hover { transition: all 0.3s; }
-    .card-hover:hover { transform: translateY(-4px); }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foodiez - Gestion de Commandes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { syne: ['Syne', 'sans-serif'], sans: ['DM Sans', 'sans-serif'] },
+                    colors: { primary: '#FF4D1C', dark: { 900: '#0f0f0f', 800: '#1a1a1a', 700: '#2a2a2a' } }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="bg-gray-950 text-gray-100 min-h-screen">
 
-  <!-- NAVBAR -->
-  <nav class="bg-gray-900 border-b border-gray-800 fixed w-full z-50">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('dashboard')">
-        <i class="fa-solid fa-utensils text-3xl text-orange-500"></i>
-        <div>
-          <span class="title-font text-2xl font-bold tracking-tight">Foodiez</span>
-        </div>
-      </div>
+<body class="font-sans bg-dark-900 text-gray-100 min-h-screen flex flex-col">
 
-      <div class="flex gap-8 text-sm">
-        <a onclick="navigate('dashboard')" class="nav-link flex items-center gap-2 hover:text-orange-500 cursor-pointer" id="nav-dashboard">
-          <i class="fa-solid fa-chart-pie"></i> Dashboard
-        </a>
-        <a onclick="navigate('orders')" class="nav-link flex items-center gap-2 hover:text-orange-500 cursor-pointer" id="nav-orders">
-          <i class="fa-solid fa-list"></i> Commandes
-        </a>
-        <a onclick="navigate('new')" class="nav-link flex items-center gap-2 hover:text-orange-500 cursor-pointer" id="nav-new">
-          <i class="fa-solid fa-plus"></i> Nouvelle commande
-        </a>
-      </div>
-    </div>
-  </nav>
-
-  <div class="pt-20 pb-12 max-w-7xl mx-auto px-6">
-
-    <!-- DASHBOARD -->
-    <div id="dashboard" class="section">
-      <h1 class="text-4xl font-bold title-font mb-8">Dashboard</h1>
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-10" id="stats-cards"></div>
-
-      <h2 class="text-2xl font-semibold mb-4">Commandes récentes</h2>
-      <div id="recent-orders" class="bg-gray-900 rounded-2xl overflow-hidden"></div>
-    </div>
-
-    <!-- LISTE DES COMMANDES -->
-    <div id="orders" class="section hidden">
-      <div class="flex justify-between items-center mb-6">
-        <h1 class="text-4xl font-bold title-font">Toutes les commandes</h1>
-        <button onclick="navigate('new')" class="bg-orange-500 hover:bg-orange-600 px-6 py-3 rounded-xl flex items-center gap-2 font-medium">
-          <i class="fa-solid fa-plus"></i> Nouvelle commande
-        </button>
-      </div>
-
-      <!-- Tabs -->
-      <div class="flex gap-2 border-b border-gray-800 mb-6 overflow-x-auto" id="status-tabs"></div>
-
-      <div id="orders-list" class="space-y-4"></div>
-    </div>
-
-    <!-- NOUVELLE COMMANDE -->
-    <div id="new" class="section hidden">
-      <h1 class="text-4xl font-bold title-font mb-8">Nouvelle commande</h1>
-      <div class="max-w-2xl mx-auto bg-gray-900 rounded-3xl p-8">
-        <form id="new-order-form">
-          <div class="mb-6">
-            <label class="block text-sm mb-2">Nom du client</label>
-            <input type="text" id="customer-name" class="w-full bg-gray-800 rounded-xl px-5 py-4 outline-none focus:ring-2 focus:ring-orange-500" placeholder="Ahmed Alami" required>
-          </div>
-
-          <div class="mb-6">
-            <label class="block text-sm mb-2">Articles</label>
-            <div class="flex gap-2 mb-3" id="items-container"></div>
-            <div class="flex gap-3">
-              <input type="text" id="new-item" class="flex-1 bg-gray-800 rounded-xl px-5 py-4 outline-none" placeholder="Ajouter un article...">
-              <button type="button" onclick="addItem()" class="bg-gray-700 hover:bg-gray-600 px-6 rounded-xl">Ajouter</button>
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 bg-dark-800/90 backdrop-blur border-b border-dark-700">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6v13m0-13c-1.7 0-3.3.5-4.5 1.3M12 6c1.7 0 3.3.5 4.5 1.3" />
+                    </svg>
+                </div>
+                <span class="font-syne font-bold text-xl">Foodiez</span>
             </div>
-          </div>
-
-          <div class="mb-8">
-            <label class="block text-sm mb-2">Prix total (DH)</label>
-            <input type="number" id="total-price" class="w-full bg-gray-800 rounded-xl px-5 py-4 outline-none focus:ring-2 focus:ring-orange-500" required>
-          </div>
-
-          <div class="flex gap-4">
-            <button type="button" onclick="resetForm()" class="flex-1 py-4 border border-gray-700 rounded-2xl hover:bg-gray-800">Réinitialiser</button>
-            <button type="submit" class="flex-1 py-4 bg-orange-500 hover:bg-orange-600 rounded-2xl font-semibold">Créer la commande</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- TOAST -->
-  <div id="toast" class="hidden fixed bottom-6 right-6 bg-gray-800 border border-gray-700 rounded-2xl px-6 py-4 flex items-center gap-3 shadow-2xl"></div>
-
-  <script>
-    // Données simulées (comme JSON Server)
-    let orders = [
-      { id: 1287, customerName: "Salma Ben", items: ["Pizza", "Soda"], totalPrice: 120, status: "pending", createdAt: "2025-05-08" },
-      { id: 1286, customerName: "Yassine", items: ["Burger", "Frites", "Eau"], totalPrice: 85, status: "accepted", createdAt: "2025-05-08" },
-      { id: 1285, customerName: "Imane", items: ["Pâtes", "Jus"], totalPrice: 70, status: "completed", createdAt: "2025-05-07" },
-      { id: 1284, customerName: "Omar", items: ["Tacos", "Soda"], totalPrice: 95, status: "rejected", createdAt: "2025-05-07" }
-    ];
-
-    let currentFilter = "all";
-
-    // Navigation SPA
-    function navigate(section) {
-      document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
-      document.getElementById(section).classList.remove('hidden');
-
-      // Active nav
-      document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('text-orange-500', 'font-semibold'));
-      document.getElementById(`nav-${section}`).classList.add('text-orange-500', 'font-semibold');
-    }
-
-    // Toast
-    function showToast(message, type = "success") {
-      const toast = document.getElementById('toast');
-      toast.innerHTML = `
-        <i class="fa-solid ${type === 'success' ? 'fa-check-circle text-green-500' : 'fa-xmark-circle text-red-500'}"></i>
-        <span>${message}</span>
-      `;
-      toast.classList.remove('hidden');
-      setTimeout(() => toast.classList.add('hidden'), 3000);
-    }
-
-    // Render Stats
-    function renderStats() {
-      const total = orders.length;
-      const pending = orders.filter(o => o.status === "pending").length;
-      const accepted = orders.filter(o => o.status === "accepted").length;
-      const completed = orders.filter(o => o.status === "completed").length;
-      const rejected = orders.filter(o => o.status === "rejected").length;
-      const revenue = orders.filter(o => o.status !== "rejected").reduce((sum, o) => sum + o.totalPrice, 0);
-
-      document.getElementById('stats-cards').innerHTML = `
-        <div class="bg-gray-900 rounded-2xl p-6 card-hover">
-          <p class="text-gray-400 text-sm">Total commandes</p>
-          <p class="text-4xl font-bold mt-2">${total}</p>
+            <div class="hidden md:flex gap-1">
+                <a href="#" class="px-4 py-2 rounded-lg text-sm font-medium bg-dark-700 text-white">Dashboard</a>
+                <a href="#"
+                    class="px-4 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white">Commandes</a>
+                <a href="#" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white">Nouvelle</a>
+            </div>
         </div>
-        <div class="bg-gray-900 rounded-2xl p-6 card-hover">
-          <p class="text-amber-400 text-sm">En attente</p>
-          <p class="text-4xl font-bold mt-2">${pending}</p>
-        </div>
-        <div class="bg-gray-900 rounded-2xl p-6 card-hover">
-          <p class="text-blue-400 text-sm">Acceptées</p>
-          <p class="text-4xl font-bold mt-2">${accepted}</p>
-        </div>
-        <div class="bg-gray-900 rounded-2xl p-6 card-hover">
-          <p class="text-green-400 text-sm">Complétées</p>
-          <p class="text-4xl font-bold mt-2">${completed}</p>
-        </div>
-        <div class="bg-gray-900 rounded-2xl p-6 card-hover">
-          <p class="text-red-400 text-sm">Refusées</p>
-          <p class="text-4xl font-bold mt-2">${rejected}</p>
-        </div>
-        <div class="bg-gray-900 rounded-2xl p-6 card-hover">
-          <p class="text-emerald-400 text-sm">Revenus</p>
-          <p class="text-4xl font-bold mt-2">${revenue} DH</p>
-        </div>
-      `;
-    }
+    </nav>
 
-    // Render Recent Orders
-    function renderRecentOrders() {
-      const recent = [...orders].sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
-      let html = `<table class="w-full"><thead><tr class="border-b border-gray-800"><th class="text-left py-4 px-6">Client</th><th class="text-left py-4">Articles</th><th class="text-right py-4">Total</th><th class="text-center py-4">Statut</th></tr></thead><tbody>`;
-      
-      recent.forEach(order => {
-        const statusColor = order.status === 'pending' ? 'amber' : order.status === 'accepted' ? 'blue' : order.status === 'completed' ? 'green' : 'red';
-        html += `
-          <tr class="border-b border-gray-800 hover:bg-gray-800/50">
-            <td class="py-5 px-6">${order.customerName}</td>
-            <td class="py-5">${order.items.join(', ')}</td>
-            <td class="py-5 text-right font-semibold">${order.totalPrice} DH</td>
-            <td class="py-5 text-center"><span class="px-4 py-1 text-xs rounded-full bg-${statusColor}-500/20 text-${statusColor}-400">${order.status}</span></td>
-          </tr>`;
-      });
-      html += `</tbody></table>`;
-      document.getElementById('recent-orders').innerHTML = html;
-    }
+    <!-- Main -->
+    <main class="flex-1 pt-20 pb-8 px-4 max-w-7xl mx-auto w-full">
 
-    // Render All Orders
-    function renderOrders() {
-      let filtered = currentFilter === "all" ? orders : orders.filter(o => o.status === currentFilter);
-      
-      let html = '';
-      filtered.forEach(order => {
-        const statusColor = order.status === 'pending' ? 'amber' : order.status === 'accepted' ? 'blue' : order.status === 'completed' ? 'green' : 'red';
-        html += `
-          <div class="bg-gray-900 rounded-2xl p-6 flex flex-col md:flex-row gap-6 items-center justify-between">
+        <!-- Stats -->
+        <h1 class="text-2xl font-syne font-bold mb-5">Dashboard</h1>
+        <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-6">
+            <div class="bg-dark-700 border border-dark-600 rounded-xl p-4">
+                <p class="text-2xl font-bold text-white">24</p>
+                <p class="text-xs text-gray-400">Total commandes</p>
+            </div>
+            <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4">
+                <p class="text-2xl font-bold text-amber-400">8</p>
+                <p class="text-xs text-gray-400">En attente</p>
+            </div>
+            <div class="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
+                <p class="text-2xl font-bold text-blue-400">6</p>
+                <p class="text-xs text-gray-400">Acceptées</p>
+            </div>
+            <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-4">
+                <p class="text-2xl font-bold text-green-400">7</p>
+                <p class="text-xs text-gray-400">Complétées</p>
+            </div>
+            <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4">
+                <p class="text-2xl font-bold text-red-400">3</p>
+                <p class="text-xs text-gray-400">Refusées</p>
+            </div>
+        </div>
+
+        <!-- Recent Orders Table -->
+        <div class="bg-dark-800 border border-dark-700 rounded-xl overflow-hidden">
+            <div class="px-4 py-3 border-b border-dark-700">
+                <h2 class="font-semibold">Commandes récentes</h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-dark-700/50 text-gray-400">
+                        <tr>
+                            <th class="px-4 py-2 text-left">Client</th>
+                            <th class="px-4 py-2 text-left">Articles</th>
+                            <th class="px-4 py-2 text-left">Total</th>
+                            <th class="px-4 py-2 text-left">Statut</th>
+                            <th class="px-4 py-2 text-left">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-dark-700">
+                        <tr class="hover:bg-dark-700/30">
+                            <td class="px-4 py-3 font-medium">Ahmed</td>
+                            <td class="px-4 py-3 text-gray-300">Pizza, Soda</td>
+                            <td class="px-4 py-3 font-bold text-primary">120 DH</td>
+                            <td class="px-4 py-3"><span
+                                    class="px-2.5 py-1 rounded-full text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30">En
+                                    attente</span></td>
+                            <td class="px-4 py-3 text-gray-400">2025-03-16</td>
+                        </tr>
+                        <tr class="hover:bg-dark-700/30">
+                            <td class="px-4 py-3 font-medium">Sarah</td>
+                            <td class="px-4 py-3 text-gray-300">Burger, Frites</td>
+                            <td class="px-4 py-3 font-bold text-primary">85 DH</td>
+                            <td class="px-4 py-3"><span
+                                    class="px-2.5 py-1 rounded-full text-xs bg-blue-500/20 text-blue-400 border border-blue-500/30">Acceptée</span>
+                            </td>
+                            <td class="px-4 py-3 text-gray-400">2025-03-16</td>
+                        </tr>
+                        <tr class="hover:bg-dark-700/30">
+                            <td class="px-4 py-3 font-medium">Mohamed</td>
+                            <td class="px-4 py-3 text-gray-300">Tacos</td>
+                            <td class="px-4 py-3 font-bold text-primary">95 DH</td>
+                            <td class="px-4 py-3"><span
+                                    class="px-2.5 py-1 rounded-full text-xs bg-green-500/20 text-green-400 border border-green-500/30">Complétée</span>
+                            </td>
+                            <td class="px-4 py-3 text-gray-400">2025-03-15</td>
+                        </tr>
+                        <tr class="hover:bg-dark-700/30">
+                            <td class="px-4 py-3 font-medium">Fatima</td>
+                            <td class="px-4 py-3 text-gray-300">Salade</td>
+                            <td class="px-4 py-3 font-bold text-primary">45 DH</td>
+                            <td class="px-4 py-3"><span
+                                    class="px-2.5 py-1 rounded-full text-xs bg-red-500/20 text-red-400 border border-red-500/30">Refusée</span>
+                            </td>
+                            <td class="px-4 py-3 text-gray-400">2025-03-15</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Order Cards (Alternative View) -->
+        <h2 class="text-xl font-syne font-bold mt-8 mb-4">Toutes les commandes</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Card 1 -->
+            <div class="bg-dark-800 border border-dark-700 rounded-xl p-4">
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <p class="font-semibold">Ahmed</p>
+                        <p class="text-xs text-gray-400">#1 • 2025-03-16</p>
+                    </div>
+                    <span
+                        class="px-2.5 py-1 rounded-full text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30">En
+                        attente</span>
+                </div>
+                <div class="flex flex-wrap gap-1.5 mb-3">
+                    <span class="px-2 py-0.5 bg-dark-700 rounded text-xs">Pizza</span>
+                    <span class="px-2 py-0.5 bg-dark-700 rounded text-xs">Soda</span>
+                </div>
+                <div class="flex justify-between items-center pt-3 border-t border-dark-700">
+                    <span class="text-lg font-bold text-primary">120 DH</span>
+                    <div class="flex gap-1">
+                        <button class="px-2 py-1 bg-blue-600 rounded text-xs">Accepter</button>
+                        <button class="px-2 py-1 bg-red-600 rounded text-xs">Refuser</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 2 -->
+            <div class="bg-dark-800 border border-dark-700 rounded-xl p-4">
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <p class="font-semibold">Sarah</p>
+                        <p class="text-xs text-gray-400">#2 • 2025-03-16</p>
+                    </div>
+                    <span
+                        class="px-2.5 py-1 rounded-full text-xs bg-blue-500/20 text-blue-400 border border-blue-500/30">Acceptée</span>
+                </div>
+                <div class="flex flex-wrap gap-1.5 mb-3">
+                    <span class="px-2 py-0.5 bg-dark-700 rounded text-xs">Burger</span>
+                    <span class="px-2 py-0.5 bg-dark-700 rounded text-xs">Frites</span>
+                </div>
+                <div class="flex justify-between items-center pt-3 border-t border-dark-700">
+                    <span class="text-lg font-bold text-primary">85 DH</span>
+                    <button class="px-2 py-1 bg-green-600 rounded text-xs">Compléter</button>
+                </div>
+            </div>
+            <!-- Card 3 -->
+            <div class="bg-dark-800 border border-dark-700 rounded-xl p-4">
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <p class="font-semibold">Karim</p>
+                        <p class="text-xs text-gray-400">#5 • 2025-03-16</p>
+                    </div>
+                    <span
+                        class="px-2.5 py-1 rounded-full text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30">En
+                        attente</span>
+                </div>
+                <div class="flex flex-wrap gap-1.5 mb-3">
+                    <span class="px-2 py-0.5 bg-dark-700 rounded text-xs">Pizza</span>
+                    <span class="px-2 py-0.5 bg-dark-700 rounded text-xs">Burger</span>
+                    <span class="px-2 py-0.5 bg-dark-700 rounded text-xs">Soda</span>
+                </div>
+                <div class="flex justify-between items-center pt-3 border-t border-dark-700">
+                    <span class="text-lg font-bold text-primary">150 DH</span>
+                    <div class="flex gap-1">
+                        <button class="px-2 py-1 bg-blue-600 rounded text-xs">Accepter</button>
+                        <button class="px-2 py-1 bg-red-600 rounded text-xs">Refuser</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-700 bg-dark-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-2 text-sm">
             <div>
-              <div class="font-semibold text-lg">${order.customerName}</div>
-              <div class="text-gray-400">${order.items.join(' • ')}</div>
+                <span class="font-syne font-bold text-white">Foodiez</span>
+                <span class="text-gray-500 mx-2">•</span>
+                <span class="text-gray-400">contact@foodiez.com</span>
             </div>
-            <div class="text-right">
-              <div class="font-bold text-xl">${order.totalPrice} DH</div>
-              <div class="text-xs text-gray-500">${order.createdAt}</div>
-            </div>
-            <div>
-              <span class="px-5 py-2 text-sm rounded-full bg-${statusColor}-500/20 text-${statusColor}-400">${order.status}</span>
-            </div>
-            <div class="flex gap-2">
-              ${order.status === 'pending' ? `
-                <button onclick="updateStatus(${order.id}, 'accepted')" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-xl text-sm">Accepter</button>
-                <button onclick="updateStatus(${order.id}, 'rejected')" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-xl text-sm">Refuser</button>
-              ` : ''}
-              ${order.status === 'accepted' ? `
-                <button onclick="updateStatus(${order.id}, 'completed')" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-xl text-sm">Compléter</button>
-              ` : ''}
-              <button onclick="deleteOrder(${order.id})" class="bg-gray-700 hover:bg-red-600 px-4 py-2 rounded-xl text-sm">
-                <i class="fa-solid fa-trash"></i>
-              </button>
-            </div>
-          </div>`;
-      });
-
-      document.getElementById('orders-list').innerHTML = html || `<p class="text-center py-12 text-gray-400">Aucune commande trouvée</p>`;
-    }
-
-    // Status Tabs
-    function renderTabs() {
-      const tabs = [
-        {key: "all", label: "Toutes"},
-        {key: "pending", label: "En attente"},
-        {key: "accepted", label: "Acceptées"},
-        {key: "completed", label: "Complétées"},
-        {key: "rejected", label: "Refusées"}
-      ];
-
-      let html = '';
-      tabs.forEach(tab => {
-        const active = currentFilter === tab.key ? 'bg-orange-500 text-white' : 'bg-gray-800 hover:bg-gray-700';
-        html += `<button onclick="filterOrders('${tab.key}')" class="px-6 py-3 rounded-2xl text-sm font-medium ${active}">${tab.label}</button>`;
-      });
-      document.getElementById('status-tabs').innerHTML = html;
-    }
-
-    window.filterOrders = function(status) {
-      currentFilter = status;
-      renderTabs();
-      renderOrders();
-    };
-
-    // Update Status
-    window.updateStatus = function(id, newStatus) {
-      const order = orders.find(o => o.id === id);
-      if (order) {
-        order.status = newStatus;
-        renderStats();
-        renderRecentOrders();
-        renderOrders();
-        showToast(`Commande #${id} passée à ${newStatus}`, "success");
-      }
-    };
-
-    // Delete Order
-    window.deleteOrder = function(id) {
-      if (confirm("Supprimer cette commande ?")) {
-        orders = orders.filter(o => o.id !== id);
-        renderStats();
-        renderRecentOrders();
-        renderOrders();
-        showToast("Commande supprimée", "success");
-      }
-    };
-
-    // Add Item in form
-    let currentItems = [];
-    window.addItem = function() {
-      const input = document.getElementById('new-item');
-      if (input.value.trim()) {
-        currentItems.push(input.value.trim());
-        renderCurrentItems();
-        input.value = '';
-      }
-    };
-
-    function renderCurrentItems() {
-      const container = document.getElementById('items-container');
-      container.innerHTML = currentItems.map((item, i) => `
-        <div class="bg-gray-800 px-4 py-2 rounded-2xl flex items-center gap-2">
-          ${item}
-          <button onclick="removeItem(${i})" class="text-red-400 hover:text-red-500">×</button>
+            <span class="text-gray-500">© 2025 Foodiez</span>
         </div>
-      `).join('');
-    }
+    </footer>
 
-    window.removeItem = function(index) {
-      currentItems.splice(index, 1);
-      renderCurrentItems();
-    };
-
-    // New Order Form
-    document.getElementById('new-order-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const customerName = document.getElementById('customer-name').value;
-      const totalPrice = parseInt(document.getElementById('total-price').value);
-
-      if (!customerName || currentItems.length === 0 || !totalPrice) {
-        showToast("Veuillez remplir tous les champs", "error");
-        return;
-      }
-
-      const newOrder = {
-        id: Date.now(),
-        customerName,
-        items: [...currentItems],
-        totalPrice,
-        status: "pending",
-        createdAt: "2025-05-08"
-      };
-
-      orders.unshift(newOrder);
-      showToast("Commande créée avec succès !", "success");
-      resetForm();
-      navigate('orders');
-      renderStats();
-      renderRecentOrders();
-      renderOrders();
-    });
-
-    function resetForm() {
-      document.getElementById('new-order-form').reset();
-      currentItems = [];
-      renderCurrentItems();
-    }
-
-    // Initialisation
-    function init() {
-      navigate('dashboard');
-      renderStats();
-      renderRecentOrders();
-      renderOrders();
-      renderTabs();
-    }
-
-    window.onload = init;
-  </script>
 </body>
+
 </html>

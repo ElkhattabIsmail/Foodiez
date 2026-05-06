@@ -1,0 +1,48 @@
+{
+  "orders": [
+    {
+      "id": 1,
+      "customerName": "Ahmed",
+      "items": ["Pizza", "Soda"],
+      "totalPrice": 120,
+      "status": "pending",
+      "createdAt": "2025-03-16"
+    },
+    {
+      "id": 2,
+      "customerName": "Sarah",
+      "items": ["Burger", "Frites"],
+      "totalPrice": 85,
+      "status": "accepted",
+      "createdAt": "2025-03-16"
+    },
+    {
+      "id": 3,
+      "customerName": "Mohamed",
+      "items": ["Tacos"],
+      "totalPrice": 95,
+      "status": "completed",
+      "createdAt": "2025-03-15"
+    },
+    {
+      "id": 4,
+      "customerName": "Fatima",
+      "items": ["Salade", "Jus d'orange"],
+      "totalPrice": 45,
+      "status": "rejected",
+      "createdAt": "2025-03-15"
+    },
+    {
+      "id": 5,
+      "customerName": "Karim",
+      "items": ["Pizza", "Burger", "Soda"],
+      "totalPrice": 150,
+      "status": "pending",
+      "createdAt": "2025-03-17"
+    }
+  ],
+  "settings": {
+    "restaurantName": "Foodiez",
+    "contactEmail": "contact@foodiez.com"
+  }
+}

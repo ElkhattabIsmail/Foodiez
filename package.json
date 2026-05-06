@@ -1,0 +1,14 @@
+{
+  "name": "foodiez",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Foodiez - Restaurant Order Management SPA (JSON Server + Vanilla JS)",
+  "scripts": {
+    "dev": "json-server --watch db.json --port 3000",
+    "start": "npm run dev"
+  },
+  "devDependencies": {
+    "json-server": "^0.17.4"
+  }
+}
+

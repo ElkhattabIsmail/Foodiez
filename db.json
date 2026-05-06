@@ -1,0 +1,39 @@
+{
+  "orders": [
+    {
+      "id": 1,
+      "customerName": "Ahmed",
+      "items": [
+        "Pizza",
+        "Soda"
+      ],
+      "totalPrice": 120,
+      "status": "pending",
+      "createdAt": "2025-03-16"
+    },
+    {
+      "id": 3,
+      "customerName": "Fatima",
+      "items": [
+        "Salade"
+      ],
+      "totalPrice": 45,
+      "status": "rejected",
+      "createdAt": "2025-03-15"
+    },
+    {
+      "customerName": "test",
+      "items": [
+        "soda"
+      ],
+      "totalPrice": 22,
+      "status": "pending",
+      "createdAt": "2026-05-06",
+      "id": 4
+    }
+  ],
+  "settings": {
+    "restaurantName": "Foodiez",
+    "contactEmail": "contact@foodiez.com"
+  }
+}

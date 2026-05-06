@@ -38,10 +38,12 @@
                 <span class="font-syne font-bold text-xl">Foodiez</span>
             </div>
             <div class="hidden md:flex gap-1">
-                <a href="#" class="px-4 py-2 rounded-lg text-sm font-medium bg-dark-700 text-white">Dashboard</a>
-                <a href="#"
+                <a href="#dashboard" data-link
+                    class="px-4 py-2 rounded-lg text-sm font-medium bg-dark-700 text-white">Dashboard</a>
+                <a href="#orders" data-link
                     class="px-4 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white">Commandes</a>
-                <a href="#" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white">Nouvelle</a>
+                <a href="#new" data-link
+                    class="px-4 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white">Nouvelle</a>
             </div>
         </div>
     </nav>
@@ -49,33 +51,37 @@
     <!-- Main -->
     <main class="flex-1 pt-20 pb-8 px-4 max-w-7xl mx-auto w-full">
 
-        <!-- Stats -->
-        <h1 class="text-2xl font-syne font-bold mb-5">Dashboard</h1>
-        <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-6">
+        <!-- Global Messages -->
+        <div id="globalMessage" class="hidden mb-4"></div>
+
+        <!-- Dashboard -->
+        <section id="view-dashboard" data-view>
+            <h1 class="text-2xl font-syne font-bold mb-5">Dashboard</h1>
+            <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-6">
             <div class="bg-dark-700 border border-dark-600 rounded-xl p-4">
-                <p class="text-2xl font-bold text-white">24</p>
+                <p id="stat-total" class="text-2xl font-bold text-white">—</p>
                 <p class="text-xs text-gray-400">Total commandes</p>
             </div>
             <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4">
-                <p class="text-2xl font-bold text-amber-400">8</p>
+                <p id="stat-pending" class="text-2xl font-bold text-amber-400">—</p>
                 <p class="text-xs text-gray-400">En attente</p>
             </div>
             <div class="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
-                <p class="text-2xl font-bold text-blue-400">6</p>
+                <p id="stat-accepted" class="text-2xl font-bold text-blue-400">—</p>
                 <p class="text-xs text-gray-400">Acceptées</p>
             </div>
             <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-4">
-                <p class="text-2xl font-bold text-green-400">7</p>
+                <p id="stat-completed" class="text-2xl font-bold text-green-400">—</p>
                 <p class="text-xs text-gray-400">Complétées</p>
             </div>
             <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4">
-                <p class="text-2xl font-bold text-red-400">3</p>
+                <p id="stat-rejected" class="text-2xl font-bold text-red-400">—</p>
                 <p class="text-xs text-gray-400">Refusées</p>
             </div>
-        </div>
+            </div>
 
-        <!-- Recent Orders Table -->
-        <div class="bg-dark-800 border border-dark-700 rounded-xl overflow-hidden">
+            <!-- Recent Orders Table -->
+            <div class="bg-dark-800 border border-dark-700 rounded-xl overflow-hidden">
             <div class="px-4 py-3 border-b border-dark-700">
                 <h2 class="font-semibold">Commandes récentes</h2>
             </div>
@@ -90,118 +96,68 @@
                             <th class="px-4 py-2 text-left">Date</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-dark-700">
-                        <tr class="hover:bg-dark-700/30">
-                            <td class="px-4 py-3 font-medium">Ahmed</td>
-                            <td class="px-4 py-3 text-gray-300">Pizza, Soda</td>
-                            <td class="px-4 py-3 font-bold text-primary">120 DH</td>
-                            <td class="px-4 py-3"><span
-                                    class="px-2.5 py-1 rounded-full text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30">En
-                                    attente</span></td>
-                            <td class="px-4 py-3 text-gray-400">2025-03-16</td>
-                        </tr>
-                        <tr class="hover:bg-dark-700/30">
-                            <td class="px-4 py-3 font-medium">Sarah</td>
-                            <td class="px-4 py-3 text-gray-300">Burger, Frites</td>
-                            <td class="px-4 py-3 font-bold text-primary">85 DH</td>
-                            <td class="px-4 py-3"><span
-                                    class="px-2.5 py-1 rounded-full text-xs bg-blue-500/20 text-blue-400 border border-blue-500/30">Acceptée</span>
-                            </td>
-                            <td class="px-4 py-3 text-gray-400">2025-03-16</td>
-                        </tr>
-                        <tr class="hover:bg-dark-700/30">
-                            <td class="px-4 py-3 font-medium">Mohamed</td>
-                            <td class="px-4 py-3 text-gray-300">Tacos</td>
-                            <td class="px-4 py-3 font-bold text-primary">95 DH</td>
-                            <td class="px-4 py-3"><span
-                                    class="px-2.5 py-1 rounded-full text-xs bg-green-500/20 text-green-400 border border-green-500/30">Complétée</span>
-                            </td>
-                            <td class="px-4 py-3 text-gray-400">2025-03-15</td>
-                        </tr>
-                        <tr class="hover:bg-dark-700/30">
-                            <td class="px-4 py-3 font-medium">Fatima</td>
-                            <td class="px-4 py-3 text-gray-300">Salade</td>
-                            <td class="px-4 py-3 font-bold text-primary">45 DH</td>
-                            <td class="px-4 py-3"><span
-                                    class="px-2.5 py-1 rounded-full text-xs bg-red-500/20 text-red-400 border border-red-500/30">Refusée</span>
-                            </td>
-                            <td class="px-4 py-3 text-gray-400">2025-03-15</td>
-                        </tr>
-                    </tbody>
+                    <tbody id="recentOrdersBody" class="divide-y divide-dark-700"></tbody>
                 </table>
             </div>
-        </div>
+            </div>
+        </section>
 
-        <!-- Order Cards (Alternative View) -->
-        <h2 class="text-xl font-syne font-bold mt-8 mb-4">Toutes les commandes</h2>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <!-- Card 1 -->
-            <div class="bg-dark-800 border border-dark-700 rounded-xl p-4">
-                <div class="flex justify-between items-start mb-3">
-                    <div>
-                        <p class="font-semibold">Ahmed</p>
-                        <p class="text-xs text-gray-400">#1 • 2025-03-16</p>
-                    </div>
-                    <span
-                        class="px-2.5 py-1 rounded-full text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30">En
-                        attente</span>
-                </div>
-                <div class="flex flex-wrap gap-1.5 mb-3">
-                    <span class="px-2 py-0.5 bg-dark-700 rounded text-xs">Pizza</span>
-                    <span class="px-2 py-0.5 bg-dark-700 rounded text-xs">Soda</span>
-                </div>
-                <div class="flex justify-between items-center pt-3 border-t border-dark-700">
-                    <span class="text-lg font-bold text-primary">120 DH</span>
-                    <div class="flex gap-1">
-                        <button class="px-2 py-1 bg-blue-600 rounded text-xs">Accepter</button>
-                        <button class="px-2 py-1 bg-red-600 rounded text-xs">Refuser</button>
-                    </div>
+        <!-- Orders -->
+        <section id="view-orders" data-view class="hidden">
+            <div class="flex items-center justify-between gap-3 flex-wrap">
+                <h2 class="text-xl font-syne font-bold mt-2 mb-4">Toutes les commandes</h2>
+                <div class="flex flex-wrap gap-2">
+                    <button data-filter="all"
+                        class="px-3 py-1.5 rounded-lg text-xs font-medium bg-dark-700 text-white">Toutes</button>
+                    <button data-filter="pending"
+                        class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white border border-dark-700">En
+                        attente</button>
+                    <button data-filter="accepted"
+                        class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white border border-dark-700">Acceptées</button>
+                    <button data-filter="rejected"
+                        class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white border border-dark-700">Refusées</button>
+                    <button data-filter="completed"
+                        class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white border border-dark-700">Complétées</button>
                 </div>
             </div>
-            <!-- Card 2 -->
-            <div class="bg-dark-800 border border-dark-700 rounded-xl p-4">
-                <div class="flex justify-between items-start mb-3">
+            <div id="ordersGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            <div id="ordersEmpty" class="hidden mt-4 text-gray-400 text-sm">Aucune commande à afficher.</div>
+        </section>
+
+        <!-- New Order -->
+        <section id="view-new" data-view class="hidden">
+            <h2 class="text-xl font-syne font-bold mt-2 mb-4">Nouvelle commande</h2>
+            <div class="bg-dark-800 border border-dark-700 rounded-xl p-4 max-w-2xl">
+                <form id="newOrderForm" class="space-y-4">
                     <div>
-                        <p class="font-semibold">Sarah</p>
-                        <p class="text-xs text-gray-400">#2 • 2025-03-16</p>
+                        <label class="block text-sm text-gray-300 mb-1">Nom du client</label>
+                        <input id="customerName" type="text" required
+                            class="w-full bg-dark-700 border border-dark-600 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary"
+                            placeholder="Ex: Ahmed" />
                     </div>
-                    <span
-                        class="px-2.5 py-1 rounded-full text-xs bg-blue-500/20 text-blue-400 border border-blue-500/30">Acceptée</span>
-                </div>
-                <div class="flex flex-wrap gap-1.5 mb-3">
-                    <span class="px-2 py-0.5 bg-dark-700 rounded text-xs">Burger</span>
-                    <span class="px-2 py-0.5 bg-dark-700 rounded text-xs">Frites</span>
-                </div>
-                <div class="flex justify-between items-center pt-3 border-t border-dark-700">
-                    <span class="text-lg font-bold text-primary">85 DH</span>
-                    <button class="px-2 py-1 bg-green-600 rounded text-xs">Compléter</button>
-                </div>
-            </div>
-            <!-- Card 3 -->
-            <div class="bg-dark-800 border border-dark-700 rounded-xl p-4">
-                <div class="flex justify-between items-start mb-3">
                     <div>
-                        <p class="font-semibold">Karim</p>
-                        <p class="text-xs text-gray-400">#5 • 2025-03-16</p>
+                        <label class="block text-sm text-gray-300 mb-1">Articles (séparés par virgules)</label>
+                        <input id="items" type="text" required
+                            class="w-full bg-dark-700 border border-dark-600 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary"
+                            placeholder="Ex: Pizza, Soda" />
                     </div>
-                    <span
-                        class="px-2.5 py-1 rounded-full text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30">En
-                        attente</span>
-                </div>
-                <div class="flex flex-wrap gap-1.5 mb-3">
-                    <span class="px-2 py-0.5 bg-dark-700 rounded text-xs">Pizza</span>
-                    <span class="px-2 py-0.5 bg-dark-700 rounded text-xs">Burger</span>
-                    <span class="px-2 py-0.5 bg-dark-700 rounded text-xs">Soda</span>
-                </div>
-                <div class="flex justify-between items-center pt-3 border-t border-dark-700">
-                    <span class="text-lg font-bold text-primary">150 DH</span>
-                    <div class="flex gap-1">
-                        <button class="px-2 py-1 bg-blue-600 rounded text-xs">Accepter</button>
-                        <button class="px-2 py-1 bg-red-600 rounded text-xs">Refuser</button>
+                    <div>
+                        <label class="block text-sm text-gray-300 mb-1">Prix total (DH)</label>
+                        <input id="totalPrice" type="number" min="0" step="1" required
+                            class="w-full bg-dark-700 border border-dark-600 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary"
+                            placeholder="Ex: 120" />
                     </div>
-                </div>
+                    <div class="flex gap-2">
+                        <button id="submitOrderBtn" type="submit"
+                            class="px-4 py-2 bg-primary rounded-lg text-sm font-medium text-white">Ajouter</button>
+                        <button type="reset"
+                            class="px-4 py-2 bg-dark-700 rounded-lg text-sm font-medium text-gray-200 border border-dark-600">Reset</button>
+                    </div>
+                    <p class="text-xs text-gray-500">La commande sera créée en statut <span
+                            class="text-gray-300">pending</span>.</p>
+                </form>
             </div>
-        </div>
+        </section>
 
     </main>
 
@@ -209,14 +165,15 @@
     <footer class="border-t border-dark-700 bg-dark-800 mt-auto">
         <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-2 text-sm">
             <div>
-                <span class="font-syne font-bold text-white">Foodiez</span>
+                <span id="footerRestaurantName" class="font-syne font-bold text-white">Foodiez</span>
                 <span class="text-gray-500 mx-2">•</span>
-                <span class="text-gray-400">contact@foodiez.com</span>
+                <span id="footerContactEmail" class="text-gray-400">contact@foodiez.com</span>
             </div>
             <span class="text-gray-500">© 2025 Foodiez</span>
         </div>
     </footer>
 
+    <script src="./script.js"></script>
 </body>
 
 </html>

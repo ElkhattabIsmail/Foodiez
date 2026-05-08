@@ -416,3 +416,23 @@ function wireEvents() {
     });
   }
 }
+
+// ================= INIT =================
+async function start() {
+  showView(routeFromHash());
+  renderNavActive();
+
+  try {
+    await fetchInitialData();
+    renderFooter();
+    renderDashboard();
+    renderFilterButtons();
+    renderOrders();
+  } catch (err) {
+    showMessage("error", "Impossible de charger les données. Vérifiez que JSON Server tourne sur http://localhost:3000.");
+  }
+
+  wireEvents();
+}
+
+start();

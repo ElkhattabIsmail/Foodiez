@@ -296,7 +296,7 @@ function setSubmitting(isSubmitting) {
 function showView(viewName) {
   state.view = viewName;
   for (const section of $$("[data-view]")) {
-    section.classList.toggle("hidden", section.id !== view-${viewName});
+    section.classList.toggle("hidden", section.id !== `view-${viewName}`);
   }
   renderNavActive();
 }

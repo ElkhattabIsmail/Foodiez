@@ -286,3 +286,153 @@ function setSubmitting(isSubmitting) {
   btn.classList.toggle("cursor-not-allowed", isSubmitting);
   btn.textContent = isSubmitting ? "Ajout..." : "Ajouter";
 }
+
+
+
+
+
+
+// ================= ROUTING =================
+function showView(viewName) {
+  state.view = viewName;
+  for (const section of $$("[data-view]")) {
+    section.classList.toggle("hidden", section.id !== `view-${viewName}`);
+  }
+  renderNavActive();
+}
+
+function routeFromHash() {
+  const raw = (window.location.hash || "#dashboard").replace("#", "");
+  if (raw === "orders") return "orders";
+  if (raw === "new") return "new";
+  return "dashboard";
+}
+
+// ================= EVENTS =================
+function wireEvents() {
+  window.addEventListener("hashchange", () => {
+    showView(routeFromHash());
+    if (state.view === "orders") {
+      renderFilterButtons();
+      renderOrders();
+    }
+  });
+
+  for (const btn of $$("button[data-filter]")) {
+    btn.addEventListener("click", () => {
+      state.filter = btn.dataset.filter || "all";
+      renderFilterButtons();
+      renderOrders();
+    });
+  }
+
+  const grid = $("#ordersGrid");
+  if (grid) {
+    grid.addEventListener("change", async (e) => {
+      const target = e.target;
+      if (!(target instanceof HTMLSelectElement)) return;
+      if (target.dataset.action !== "status") return;
+
+      const card = target.closest("[data-order-id]");
+      if (!card) return;
+      const orderId = Number(card.dataset.orderId);
+      const newStatus = target.value;
+
+      try {
+        const updated = await updateOrder(orderId, { status: newStatus });
+        state.orders = state.orders.map((o) => (o.id === orderId ? updated : o));
+        renderDashboard();
+        renderOrders();
+        showMessage("success", "Statut mis à jour.");
+      } catch (err) {
+        showMessage("error", "Erreur lors de la mise à jour du statut.");
+        renderOrders();
+      }
+    });
+
+    grid.addEventListener("click", async (e) => {
+      const target = e.target;
+      if (!(target instanceof HTMLElement)) return;
+      if (target.dataset.action !== "delete") return;
+
+      const card = target.closest("[data-order-id]");
+      if (!card) return;
+      const orderId = Number(card.dataset.orderId);
+
+      const ok = window.confirm("Supprimer cette commande ?");
+      if (!ok) return;
+
+      try {
+        await deleteOrder(orderId);
+        state.orders = state.orders.filter((o) => o.id !== orderId);
+        renderDashboard();
+        renderOrders();
+        showMessage("success", "Commande supprimée.");
+      } catch (err) {
+        showMessage("error", "Erreur lors de la suppression.");
+      }
+    });
+  }
+
+  const form = $("#newOrderForm");
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const customerName = ($("#customerName")?.value || "").trim();
+      const itemsRaw = ($("#items")?.value || "").trim();
+      const totalPriceRaw = ($("#totalPrice")?.value || "").trim();
+
+      const items = normalizeItems(itemsRaw);
+      const totalPrice = Number(totalPriceRaw);
+
+      if (!customerName || items.length === 0 || !Number.isFinite(totalPrice) || totalPrice < 0) {
+        showMessage("error", "Veuillez remplir correctement tous les champs.");
+        return;
+      }
+
+      setSubmitting(true);
+      try {
+        const payload = {
+          customerName,
+          items,
+          totalPrice,
+          status: "pending",
+          createdAt: formatDateISO(),
+        };
+        const created = await createOrder(payload);
+        state.orders = [created, ...state.orders];
+
+        form.reset();
+        renderDashboard();
+        renderOrders();
+        showMessage("success", "Commande ajoutée avec succès.");
+
+        window.location.hash = "#orders";
+      } catch (err) {
+        showMessage("error", "Erreur lors de l'ajout de la commande. Vérifiez que JSON Server est lancé.");
+      } finally {
+        setSubmitting(false);
+      }
+    });
+  }
+}
+
+// ================= INIT =================
+async function start() {
+  showView(routeFromHash());
+  renderNavActive();
+
+  try {
+    await fetchInitialData();
+    renderFooter();
+    renderDashboard();
+    renderFilterButtons();
+    renderOrders();
+  } catch (err) {
+    showMessage("error", "Impossible de charger les données. Vérifiez que JSON Server tourne sur http://localhost:3000.");
+  }
+
+  wireEvents();
+}
+
+start();

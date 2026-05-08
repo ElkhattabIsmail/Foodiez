@@ -216,3 +216,73 @@ function renderNavActive() {
     }
   }
 }
+
+
+
+
+
+
+// ================= NOTIFICATIONS =================
+function showMessage(type, text) {
+  const el = $("#globalMessage");
+  if (!el) return;
+
+  const styles =
+    type === "error"
+      ? "bg-red-500/10 border border-red-500/30 text-red-200"
+      : type === "success"
+      ? "bg-green-500/10 border border-green-500/30 text-green-200"
+      : "bg-blue-500/10 border border-blue-500/30 text-blue-200";
+
+  el.className = `mb-4 rounded-xl px-4 py-3 text-sm ${styles}`;
+  el.textContent = text;
+  el.classList.remove("hidden");
+
+  window.clearTimeout(showMessage._t);
+  showMessage._t = window.setTimeout(() => {
+    el.classList.add("hidden");
+  }, 4500);
+}
+
+// ================= BUSINESS LOGIC =================
+function computeStats(orders) {
+  const counts = { total: orders.length, pending: 0, accepted: 0, rejected: 0, completed: 0 };
+  for (const o of orders) {
+    if (o.status === "pending") counts.pending += 1;
+    else if (o.status === "accepted") counts.accepted += 1;
+    else if (o.status === "rejected") counts.rejected += 1;
+    else if (o.status === "completed") counts.completed += 1;
+  }
+  return counts;
+}
+
+// ================= CRUD =================
+async function createOrder(payload) {
+  const created = await apiRequest("/orders", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+  return created;
+}
+
+async function updateOrder(id, patch) {
+  const updated = await apiRequest(`/orders/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(patch),
+  });
+  return updated;
+}
+
+async function deleteOrder(id) {
+  await apiRequest(`/orders/${id}`, { method: "DELETE" });
+}
+
+// ================= FORM =================
+function setSubmitting(isSubmitting) {
+  const btn = $("#submitOrderBtn");
+  if (!btn) return;
+  btn.disabled = isSubmitting;
+  btn.classList.toggle("opacity-70", isSubmitting);
+  btn.classList.toggle("cursor-not-allowed", isSubmitting);
+  btn.textContent = isSubmitting ? "Ajout..." : "Ajouter";
+}
